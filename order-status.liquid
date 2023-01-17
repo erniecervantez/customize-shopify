@@ -1,0 +1,24 @@
+{% assign statuses = 'Cut,Sew,Dye,Pack,Ship' | split: ',' %}
+{% assign status_size = '40' %}
+{% assign status_color = '#121212' %}
+{% assign status_class = '' %}
+{% if order.metafields.custom.status %}
+	{% assign status_class = 'active' %}
+{% endif %}
+
+<ul class="status">
+	{% for status in statuses %}
+		<li class="{{ status_class }}">{{ status }}</li>
+		{% if order.metafields.custom.status == status %}
+			{% assign status_class = '' %}
+		{% endif %}
+	{% endfor %}
+</ul>
+
+<style>
+.status { margin-top: 40px; display: flex; position: relative; justify-content: space-between; counter-reset: step; }
+.status:after { width: 80%; position: absolute; top: {{ status_size | divided_by: 2 }}px; left: 10%; content: ''; border-top: 1px solid #d9d9d9; border-bottom: 1px solid #d9d9d9; z-index: -1; }
+.status li { width: {{ 100 | divided_by: statuses.size }}%; font-weight: 600; text-align: center; }
+.status li:before { content: counter(step); counter-increment: step; width: {{ status_size }}px; height: {{ status_size }}px; display: block; margin: 0 auto 5px; line-height: {{ status_size }}px; border: 2px solid #d9d9d9; border-radius: 50%; background: #fff; }
+.status li.active:before { color: #ffffff; border-color: {{ status_color }}; background: {{ status_color }}; }
+</style>
